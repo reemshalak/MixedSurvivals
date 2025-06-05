@@ -18,7 +18,6 @@ public class SpatialMesh : MonoBehaviour
     public GameObject gun;
     public GameObject ballPrefab;
     public Transform firePoint;
-    private HashSet<PaintBallDemo> PaintBalls { get; } = new HashSet<PaintBallDemo>();
     private HashSet<ParticleSystem> PaintEffects { get; } = new HashSet<ParticleSystem>();
     public static SpatialMesh Instance
     {
@@ -45,50 +44,49 @@ public class SpatialMesh : MonoBehaviour
         var gunTransform = gun.transform;
         var position = firePoint.position;
         var forward = gunTransform.forward;
-        var paintball = AddBall(position, forward, forward * 10);
-        PaintBalls.Add(paintball);
+    //    var paintball = AddBall(position, forward, forward * 10);
         shootEffect.Play();
     }
     
-    private PaintBallDemo AddBall(Vector3 position, Vector3 direction, Vector3 velocity)
-    {
-        var obj = Instantiate(ballPrefab, position, Quaternion.LookRotation(direction));
-        // obj.transform.position = position;
-        obj.SetActive(true);
-        obj.GetComponent<Rigidbody>().velocity = velocity;
-        var ballMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
-        ballMaterial.color = new Color(Random.Range(0f,1f), Random.Range(0f,1f), Random.Range(0f,1f));
-        obj.GetComponent<Renderer>().material = ballMaterial;
-        var paintball = obj.GetComponent<PaintBallDemo>();
-        paintball.ballColor = ballMaterial.color;
-        return paintball;
-    }
+    // private PaintBallDemo AddBall(Vector3 position, Vector3 direction, Vector3 velocity)
+    // {
+    //     var obj = Instantiate(ballPrefab, position, Quaternion.LookRotation(direction));
+    //     // obj.transform.position = position;
+    //     obj.SetActive(true);
+    //     obj.GetComponent<Rigidbody>().velocity = velocity;
+    //     var ballMaterial = new Material(Shader.Find("Universal Render Pipeline/Unlit"));
+    //     ballMaterial.color = new Color(Random.Range(0f,1f), Random.Range(0f,1f), Random.Range(0f,1f));
+    //     obj.GetComponent<Renderer>().material = ballMaterial;
+    //     var paintball = obj.GetComponent<PaintBallDemo>();
+    //     paintball.ballColor = ballMaterial.color;
+    //     return paintball;
+    // }
     
     public void AddPaintEffect(ParticleSystem ps)
     {
         PaintEffects.Add(ps);
     }
 
-    private void RemoveAllPaintBalls()
-    {
-        var copiedList = PaintBalls.ToList();
-        foreach (var paintBall in copiedList)
-        {
-            if (paintBall)
-            {
-                RemoveBall(paintBall);
-            }
-        }
-    }
+    // private void RemoveAllPaintBalls()
+    // {
+    //     var copiedList = PaintBalls.ToList();
+    //     foreach (var paintBall in copiedList)
+    //     {
+    //         if (paintBall)
+    //         {
+    //             RemoveBall(paintBall);
+    //         }
+    //     }
+    // }
 
-    private void RemoveBall(PaintBallDemo paintBall)
-    {
-        PaintBalls.Remove(paintBall);
-        if (paintBall.gameObject)
-        {
-            DestroyImmediate(paintBall.gameObject,true);
-        }
-    }
+    // private void RemoveBall(PaintBallDemo paintBall)
+    // {
+    //     PaintBalls.Remove(paintBall);
+    //     if (paintBall.gameObject)
+    //     {
+    //         DestroyImmediate(paintBall.gameObject,true);
+    //     }
+    // }
 
 
     private void RemovePaintBallEffect(ParticleSystem paintBallEffect)

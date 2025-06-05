@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: alcohol
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 751a206ad8a49c042b5e798149bc42fb, type: 3}
+      propertyPath: m_TagString
+      value: Alcohol
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -78,6 +82,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 751a206ad8a49c042b5e798149bc42fb, type: 3}
       insertIndex: -1
       addedObject: {fileID: 938477734398292585}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 751a206ad8a49c042b5e798149bc42fb, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1326838821808309457}
   m_SourcePrefab: {fileID: 100100000, guid: 751a206ad8a49c042b5e798149bc42fb, type: 3}
 --- !u!1 &8918220255442578092 stripped
 GameObject:
@@ -106,11 +113,11 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 3
+  m_CollisionDetection: 0
 --- !u!114 &938477734398292585
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,3 +270,24 @@ MonoBehaviour:
   m_StartingSingleGrabTransformers: []
   m_StartingMultipleGrabTransformers: []
   m_AddDefaultGrabTransformers: 1
+--- !u!65 &1326838821808309457
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8918220255442578092}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 0.0021095746, y: 0.0031308979, z: 0.002553216}
+  m_Center: {x: -0.00018396585, y: -0.002195007, z: 0.000070630755}

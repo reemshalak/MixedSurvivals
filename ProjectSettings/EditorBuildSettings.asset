@@ -5,9 +5,15 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/DemoScenes/SceneCapture.unity
     guid: f626e13c31b38e74087ffc7a6a8421b2
+  - enabled: 1
+    path: Assets/mixed1.unity
+    guid: b9009520a80b4544cae52e8dc95067f2
+  - enabled: 0
+    path: Assets/mixed2.unity
+    guid: 9af77b5d1a8487741aa96d0b173f161b
   m_configObjects:
     Unity.XR.PXR.Settings: {fileID: 11400000, guid: 586db4213751f4641a8ef3b86fcb4f0d, type: 2}
     com.unity.xr.arfoundation.simulation_settings: {fileID: 11400000, guid: b1f7c156b37769f49b60a5581a36bec6, type: 2}

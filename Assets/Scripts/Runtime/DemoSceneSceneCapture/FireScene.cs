@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.Interaction.Toolkit;
 
 namespace PicoMRDemo.Runtime.Runtime.DemoSceneSceneCapture
@@ -32,16 +33,16 @@ namespace PicoMRDemo.Runtime.Runtime.DemoSceneSceneCapture
             this.anchorDict = anchorDict;
             burningAnchors.Clear();
 
-            // 🔥 Start fire only on Sofa
-            // if (anchorDict.TryGetValue("Sofa", out var sofaAnchors))
-            // {
-            //     foreach (var anchor in sofaAnchors)
-            //     {
-            //         GameObject fire = GameObject.Instantiate(firePrefab, anchor.position, anchor.rotation);
-            //         spawnedObjects.Add(fire);
-            //         burningAnchors.Add(anchor);
-            //     }
-            // }
+            //🔥 Start fire only on Sofa
+            if (anchorDict.TryGetValue("Sofa", out var sofaAnchors))
+            {
+                foreach (var anchor in sofaAnchors)
+                {
+                    GameObject fire = GameObject.Instantiate(firePrefab, anchor.position, anchor.rotation);
+                    spawnedObjects.Add(fire);
+                    burningAnchors.Add(anchor);
+                }
+            }
 
             // 🎯 Spawn interactive objects on appropriate anchors
             TrySpawnOn("Floor", rugPrefab);
@@ -92,48 +93,105 @@ namespace PicoMRDemo.Runtime.Runtime.DemoSceneSceneCapture
             burningAnchors.AddRange(newFires);
         }
 
+        // Add this to your TrySpawnOn method
         void TrySpawnOn(string label, GameObject prefab)
         {
             if (!anchorDict.TryGetValue(label, out var anchors)) return;
 
             foreach (var anchor in anchors)
             {
-                GameObject obj;
-                if(anchor.label == "Window")
-                  obj = GameObject.Instantiate(prefab, anchor.position, anchor.rotation);
-  
-                else
-                 obj = GameObject.Instantiate(prefab, anchor.position,  prefab.transform.rotation);
+                // Instantiate with original rotation and scale
+                GameObject obj = Instantiate(prefab, anchor.position, prefab.transform.rotation);
+                obj.transform.localScale = prefab.transform.localScale; // Ensure original scale
                 spawnedObjects.Add(obj);
-
-                // Optional: scaling animation effect
-               // obj.transform.localScale = Vector3.zero;
-           //     StartCoroutine(ScaleUp(obj));
-
-
-                // Optional: outline or glow shader setup
-                // Optional: floating text "🪄 Spawned: Water Bucket"
+        
+                // Add pulse effect
+                var pulse = obj.AddComponent<PulseHighlight>();
+                pulse.highlightColor = GetColorForPrefab(prefab);
+                pulse.StartPulsing();
+        
+                // Optional: Auto-stop after delay
+                StartCoroutine(StopPulsingAfterTime(pulse, 3f));
             }
+        }
+
+        private Color GetColorForPrefab(GameObject prefab)
+        {
+            if (prefab == waterBucketPrefab) return Color.blue;
+            if (prefab == extinguisherPrefab) return Color.red;
+            if (prefab == alcoholBottlePrefab) return Color.yellow;
+            return Color.green; // Default
+        }
+
+        private IEnumerator StopPulsingAfterTime(PulseHighlight pulse, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            pulse.StopPulsing();
+        }
+
+        private IEnumerator FadeOutline(Outline outline, float duration = 2f)
+        {
+            float elapsed = 0f;
+            while (elapsed < duration)
+            {
+                elapsed += Time.deltaTime;
+                outline.effectColor = new Color(outline.effectColor.r,
+                    outline.effectColor.g,
+                    outline.effectColor.b,
+                    Mathf.Lerp(1f, 0f, elapsed/duration));
+                yield return null;
+            }
+            Destroy(outline);
+        }
+
+ 
+        
+        public void ForceSpread(Vector3 position)
+        {
+            List<AnchorInfo> newFires = new();
+
+            foreach (var kvp in anchorDict)
+            {
+                foreach (var anchor in kvp.Value)
+                {
+                    // Skip if already burning or too far
+                    if (burningAnchors.Contains(anchor) || 
+                        Vector3.Distance(position, anchor.position) > 2f)
+                        continue;
+
+                    // Only spread to flammable objects
+                    if (IsFlammable(anchor.label))
+                    {
+                        GameObject fire = Instantiate(
+                            firePrefab, 
+                            anchor.position, 
+                            Quaternion.identity, // Use identity rotation unless needed
+                            transform // Parent to the scene for organization
+                        );
+                
+                        spawnedObjects.Add(fire);
+                        newFires.Add(anchor);
+                
+                        // Optional visual feedback
+                        Debug.Log($"🔥 Fire spread to {anchor.label} at {anchor.position}");
+                    }
+                }
+            }
+
+            burningAnchors.AddRange(newFires);
+        }
+
+        private bool IsFlammable(string label)
+        {
+            // Define what objects can catch fire
+            return label == "Sofa" || 
+                   label == "Table" || 
+                   label == "Wall" || 
+                   label == "Curtain" || 
+                   label == "Rug";
         }
 
         
-        private IEnumerator ScaleUp(GameObject obj)
-        {
-            float duration = 0.5f;
-            float time = 0f;
-            Vector3 targetScale = new Vector3(1.5f, 1.5f, 1.5f);
-            obj.transform.localScale = Vector3.zero;
-
-            while (time < duration)
-            {
-                obj.transform.localScale = Vector3.Lerp(obj.transform.localScale, targetScale, time / duration);
-                time += Time.deltaTime;
-                yield return null;
-            }
-
-            obj.transform.localScale = targetScale;
-        }
-
         public override void EndScene()
         {
             foreach (var obj in spawnedObjects)

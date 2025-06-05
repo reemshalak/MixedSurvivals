@@ -7,7 +7,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 using UnityEngine;
 using VContainer;
-using PicoMRDemo.Runtime.Runtime.ShootingGame;
 using UnityEngine.InputSystem;
 using UnityEngine.XR.Interaction.Toolkit;
 using System;
@@ -85,7 +84,7 @@ namespace PicoMRDemo.Runtime.UI
         [HideInInspector]
         private ControllerState rightControllerState = ControllerState.Normal;
         [Inject]
-        private IShootingGameManager _shootingGameManager;
+       // private IShootingGameManager _shootingGameManager;
         private void Awake()
         {
             if (Instance == null)
@@ -682,7 +681,7 @@ namespace PicoMRDemo.Runtime.UI
         
         private void OpenMenu(InputAction.CallbackContext content)
         { 
-            UIContext.Instance.ToggleMainMenu();
+         //   UIContext.Instance.ToggleMainMenu();
         }
         
         /// <summary>
