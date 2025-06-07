@@ -84,7 +84,6 @@ namespace PicoMRDemo.Runtime.Runtime.DemoSceneSceneCapture
                             spawnedObjects.Add(fire);
                             newFires.Add(anchor);
 
-                            // Optional: show UI tip here ("🔥 Fire is spreading!")
                         }
                     }
                 }
